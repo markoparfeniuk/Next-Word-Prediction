@@ -1,8 +1,9 @@
 import numpy as np
 import tensorflow as tf
+import pickle
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-import pickle
+from flask import Flask, request, jsonify
 
 # Load the trained model
 model = load_model('next_word_model.h5')  # Update the path to your model
@@ -30,7 +31,20 @@ def predict_next_words(text, n=3):
     return top_words
 
 
-# Example usage
-print(predict_next_words("The weather today is", 5))
-print(predict_next_words("Despite the heavy rains, the event continued", 5))
-print(predict_next_words("On top of the", 5))
+app = Flask(__name__)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.json
+    text = data['text']
+    num_words = data.get('num_words', 3)
+
+    try:
+        predictions = predict_next_words(text, num_words)
+        return jsonify({'predictions': predictions})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
