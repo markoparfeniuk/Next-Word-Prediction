@@ -50,7 +50,7 @@ def get_vocabulary_from_mongodb():
     vocabulary = [doc['word'] for doc in vocabulary_docs]  # Adjust the key if it's different in your documents
     return vocabulary
 
-def find_synonyms(word, vocab, threshold=0.55):
+def find_synonyms(word, vocab, threshold=0.9):
     word = nlp(word)
     synonyms = []
     for v_word in vocab:
@@ -59,7 +59,7 @@ def find_synonyms(word, vocab, threshold=0.55):
             synonyms.append(v_word)
     return synonyms
 
-def predict_next_words_with_synonyms(text, n=3, threshold=0.55):
+def predict_next_words_with_synonyms(text, n=3, threshold=0.9):
     vocabulary = get_vocabulary_from_mongodb()  # Fetch vocabulary from MongoDB
     top_words = predict_next_words(text, n)
     synonyms_in_vocab = {}
