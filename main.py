@@ -50,26 +50,6 @@ def get_vocabulary_from_mongodb():
     vocabulary = [doc['word'] for doc in vocabulary_docs]  # Adjust the key if it's different in your documents
     return vocabulary
 
-def find_synonyms(word, vocab, threshold=0.9):
-    word = nlp(word)
-    synonyms = []
-    for v_word in vocab:
-        v_word_spacy = nlp(v_word)
-        if word.similarity(v_word_spacy) > threshold:
-            synonyms.append(v_word)
-    return synonyms
-
-def predict_next_words_with_synonyms(text, n=3, threshold=0.9):
-    vocabulary = get_vocabulary_from_mongodb()  # Fetch vocabulary from MongoDB
-    top_words = predict_next_words(text, n)
-    synonyms_in_vocab = {}
-
-    for word in top_words:
-        synonyms = find_synonyms(word, vocabulary, threshold)
-        synonyms_in_vocab[word] = synonyms if synonyms else []
-
-    return synonyms_in_vocab
-
 def handle_prediction(predict_function, text, num_words):
     try:
         predictions = predict_function(text, num_words)
@@ -85,13 +65,6 @@ def predict():
     text = data['text']
     num_words = data.get('num_words', 3)
     return handle_prediction(predict_next_words, text, num_words)
-
-@app.route('/predict-synonyms', methods=['POST'])
-def predict_synonyms():
-    data = request.json
-    text = data['text']
-    num_words = data.get('num_words', 3)
-    return handle_prediction(predict_next_words_with_synonyms, text, num_words)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
