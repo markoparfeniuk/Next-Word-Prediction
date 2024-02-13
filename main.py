@@ -35,7 +35,7 @@ def predict_next_words(text, n=3):
     return top_words
 
 # Load spaCy's English language model
-nlp = spacy.load("en_core_web_lg")
+nlp = spacy.load("en_core_web_sm")
 
 # MongoDB connection URI
 mongo_uri = os.getenv('MONGODB_URI') # Replace with your actual MongoDB URI
