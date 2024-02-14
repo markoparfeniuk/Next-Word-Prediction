@@ -2,7 +2,6 @@ import os
 import numpy as np
 import tensorflow as tf
 import pickle
-import spacy
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from flask import Flask, request, jsonify
