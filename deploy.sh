@@ -3,4 +3,4 @@ echo "Starting deployment script"
 pip install -r requirements.txt
 
 echo "Starting the Flask application..."
-python main.py
+python3 main.py
