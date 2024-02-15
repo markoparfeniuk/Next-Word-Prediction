@@ -1,3 +1,6 @@
 #!/bin/bash
 echo "Starting deployment script"
-pip install -r requirements.txt & python main.py
+pip install -r requirements.txt
+
+echo "Starting the Flask application..."
+python main.py
